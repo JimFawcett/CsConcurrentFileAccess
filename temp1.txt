@@ -1,0 +1,89 @@
+/////////////////////////////////////////////////////////////////////
+// FileLock.cs - Handle concurrent accesses to the same file       //
+//                                                                 //
+// Jim Fawcett, CSE681 - Software Modeling & Analysis, Summer 2003 //
+/////////////////////////////////////////////////////////////////////
+
+using System;
+using System.IO;
+using System.Threading;
+
+namespace FileLocks
+{
+	class FileWriter
+	{
+      string Title(string s)
+      {
+        int len = s.Length;
+        string underline = new string('=',len+2);
+        string temp = "\n  " + s + "\n" + underline;
+        return temp;
+      }
+      int CopyFile(string inFile, string outFile)
+      {
+         string writePath = Path.GetFullPath("../../..");
+         writePath += "/" + outFile;
+         string readPath = Path.GetFullPath("../../..");
+         readPath += "/" + inFile;
+
+         int fileSize = 0;
+         try
+         {
+            FileStream fsr = File.Open(readPath,FileMode.Open,FileAccess.Read,FileShare.Read);
+            try
+            {
+               FileStream fsw = File.Open(writePath,FileMode.OpenOrCreate,FileAccess.Write,FileShare.None);
+               const int size = 1024;
+               byte[] block = new Byte[size];
+               while(true)
+               {
+                  int NumBytesRead = fsr.Read(block,0,size);
+                  if(NumBytesRead == 0)
+                     break;
+                  fsw.Write(block,0,NumBytesRead);
+                  fileSize += NumBytesRead;
+               }
+               fsw.Flush();
+               fsw.Close();
+            }
+            catch(Exception) { /* do nothing */ }
+            fsr.Close();
+         }
+         catch(Exception) { /* do nothing */ };
+         return fileSize;
+      }
+		[STAThread]
+		static void Main(string[] args)
+		{
+         FileWriter fw = new FileWriter();
+         Console.Write(fw.Title("Test File Locking"));
+         if(args.Length == 0)
+         {
+            Console.Write("\n  Please enter name of file to read");
+            return;
+         }
+         const int NumCycles =5000;
+         const int NumAttempts = 50;
+         int NumFails = 0;
+         int size = 0;
+         for(int i=0; i<NumCycles; ++i)
+         {
+            for(int j=0; j<NumAttempts; ++j)
+            {
+               size = fw.CopyFile(args[0],args[1]);
+               if(size == 0)
+               {
+                  Thread.Sleep(20); 
+                  continue;
+               }
+               Console.Write("\n  {0,5}: Copied {1} bytes from {2} to {3}",i,size,args[0],args[1]);
+               if(size > 0)
+                  break;
+            }
+            if(size == 0)
+               ++NumFails;
+         }
+         Console.Write("\n  There were {0} failures to copy\n\n",NumFails);
+      }
+	}
+}

@@ -1,0 +1,5 @@
+obj\Debug\FileReader.exe
+obj\Debug\FileReader.pdb
+bin\Debug\FileReader.exe
+bin\Debug\FileReader.pdb
+obj\Debug\ResolveAssemblyReference.cache

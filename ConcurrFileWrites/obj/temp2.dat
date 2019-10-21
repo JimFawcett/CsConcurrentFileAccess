@@ -1,0 +1,58 @@
+/////////////////////////////////////////////////////////////////////
+// FileLock.cs - Handle concurrent accesses to the same file       //
+//                                                                 //
+// Jim Fawcett, CSE681 - Software Modeling & Analysis, Summer 2003 //
+/////////////////////////////////////////////////////////////////////
+
+using System;
+using System.IO;
+
+namespace FileLocks
+{
+	class FileReader
+	{
+      string Title(string s)
+      {
+        int len = s.Length;
+        string underline = new string('=',len+2);
+        string temp = "\n  " + s + "\n" + underline;
+        return temp;
+      }
+      int ReadFile(string file)
+      {
+         string path = Path.GetFullPath("../..");
+         path += "/" + file;
+         FileStream fs = File.Open(path,FileMode.Open,FileAccess.Read,FileShare.Read);
+         int offset = 0;
+         const int size = 1024;
+         byte[] block = new Byte[size];
+         int fileSize = 0;
+         while(true)
+         {
+            int NumBytesRead = fs.Read(block,offset,size);
+            if(NumBytesRead == 0)
+               break;
+            fileSize += NumBytesRead;
+         }
+         return fileSize;
+      }
+		[STAThread]
+		static void Main(string[] args)
+		{
+         FileReader fr = new FileReader();
+         Console.Write(fr.Title("Test File Locking"));
+         if(args.Length == 0)
+         {
+            Console.Write("\n  Please enter name of file to read");
+            return;
+         }
+         const int NumCycles = 50000;
+         for(int i=0; i<NumCycles; ++i)
+         {
+            int size = fr.ReadFile(args[0]);        
+            Console.Write("\n  {0,5}: read {1} bytes from {2}",i,size,args[0]);
+         }
+         Console.Write("\n\n");
+      }
+	}
+}

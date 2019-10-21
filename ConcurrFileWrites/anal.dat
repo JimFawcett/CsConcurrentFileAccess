@@ -1,0 +1,55 @@
+
+           ANAL - Code Analysis Program
+  ----------------------------------------------
+       copyright (c) Jim Fawcett, 1992-2000
+           all rights granted to users
+             except right to publish
+
+
+  file path:
+  C:\SU\CSE681\code\CONCUR~1\CONCUR~2
+
+
+  11/17/2004  08:16:23 AM      4870  FileReader.cs  
+ ==================================================
+   cyclo lines function name
+  - type:   class FileReader 
+     4    23   bool Open(string infile)
+     1    11   void Close()
+     2    12   int ReadFile(string file)
+     1     4   byte[]LastFileRead()
+  - type:   class TestFileReader 
+     1     7   string Title(string s)
+     5    27   [STAThread]static void Main(string[]args)
+
+  module summary:
+ ================
+  lines of function code: 84
+  lines of code text:     184
+  cyclomatic complexity:  14
+
+  11/17/2004  08:08:02 AM      4837  FileWriter.cs  
+ ==================================================
+   cyclo lines function name
+  - type:   class FileWriter 
+     4    21   bool Open(string outFile)
+     1    12   void Close()
+     3    15   int CopyFile(string readPath, string writePath)
+  - type:   class TestFileWriter 
+     1     7   string Title(string s)
+     5    28   [STAThread]static void Main(string[]args)
+
+  module summary:
+ ================
+  lines of function code: 83
+  lines of code text:     179
+  cyclomatic complexity:  14
+
+ =================================================
+          summary statistics - all files:
+ =================================================
+
+[   28,  167] - total cyclo, total function lines
+         363  - total lines
+
+

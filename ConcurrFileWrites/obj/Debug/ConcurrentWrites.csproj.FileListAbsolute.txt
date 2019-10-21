@@ -1,0 +1,2 @@
+C:\su\CSE681\code\ConcurrentFileAccess\ConcurrFileWrites\obj\Debug\FileReader.exe
+C:\su\CSE681\code\ConcurrentFileAccess\ConcurrFileWrites\obj\Debug\FileReader.pdb
